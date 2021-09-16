@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import static de.iclipse.BLMain.dispatcher;
+import static de.iclipse.util.TimeUtils.formatTime;
 import static de.iclipse.util.UUIDFetcher.getName;
 import static de.iclipse.util.UUIDFetcher.getUUID;
 
@@ -230,26 +231,5 @@ public class BanCommands implements CommandExecutor {
         return false;
     }
 
-    public static String formatTime(long millis) {
-        String s = "";
-        int seconds = (int) (millis / 1000L);
-        if (seconds == 0) return "PERMANENT";
-        if ((seconds / (60.0 * 60.0)) > 1) {
-            s += (int) (seconds / (60.0 * 60.0)) + " " + dispatcher.get("unit.hours", false) + " ";
-        }
-        if (seconds / (60.0 * 60.0 * 24) > 1) {
-            s += (int) (seconds / (60.0 * 60.0 * 24)) + " " + dispatcher.get("unit.days", false) + " ";
-        }
-        if (seconds / (60.0 * 60.0 * 24 * 7) > 1) {
-            s += (int) (seconds / (60.0 * 60.0 * 24 * 7)) + " " + dispatcher.get("unit.weeks", false) + " ";
-        }
-        if (seconds / (60.0 * 60.0 * 24 * 30) > 1) {
-            s += (int) (seconds / (60.0 * 60.0 * 24 * 30)) + " " + dispatcher.get("unit.months", false) + " ";
-        }
-        if (seconds / (60.0 * 60.0 * 24 * 365) > 1) {
-            s += (int) (seconds / (60.0 * 60.0 * 24 * 365)) + " " + dispatcher.get("unit.years", false) + " ";
-        }
-        return s;
-    }
 
 }

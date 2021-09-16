@@ -42,7 +42,7 @@ public class BanTable {
     }
 
     public static Ban getActiveBan(UUID uuid){
-        ResultSet resultSet = mySQL.querry("SELECT * FROM banTable WHERE uuid = '" + uuid + "' AND (banEnd > CURRENT_TIMESTAMP OR banDuration > -1)");
+        ResultSet resultSet = mySQL.querry("SELECT * FROM banTable WHERE uuid = '" + uuid + "' AND (banEnd > CURRENT_TIMESTAMP OR banDuration = -1)");
         try {
             if(resultSet.next()){
                 return toBan(resultSet);
@@ -50,7 +50,6 @@ public class BanTable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("SELECT * FROM banTable WHERE banEnd > CURRENT_TIMESTAMP OR banDuration > -1 AND uuid = '" + uuid + "'");
         throw new NullPointerException();
     }
 

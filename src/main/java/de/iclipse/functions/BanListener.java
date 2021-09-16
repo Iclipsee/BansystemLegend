@@ -15,16 +15,16 @@ public class BanListener implements Listener {
         UUID uuid = event.getPlayer().getUniqueId();
         if(BanUtils.isBanned(uuid)) {
             Ban activeBan = BanUtils.getActiveBan(uuid);
-            String releaseDate;
-            if(activeBan.isPermanent()){
-                releaseDate = "PERMANENT";
-            }else{
-                releaseDate = TimeUtils.convertTimestamp(activeBan.getBanEnd());
-            }
+
             StringBuilder kickMessage = new StringBuilder();
             kickMessage.append(dispatcher.get("login.blocked.title", false)).append("\n");
             kickMessage.append(dispatcher.get("login.blocked.reason", false, activeBan.getReason())).append("\n\n");
-            kickMessage.append(dispatcher.get("login.blocked.releaseDate", false, releaseDate));
+            if(activeBan.isPermanent()){
+                kickMessage.append(dispatcher.get("login.blocked.releaseDate", false, "PERMANENT"));
+            }else{
+                kickMessage.append(dispatcher.get("login.blocked.releaseDate", false, TimeUtils.convertTimestamp(activeBan.getBanEnd())) + "\n");
+                kickMessage.append(dispatcher.get("login.blocked.unbannedIn", false, TimeUtils.formatTime(activeBan.getBanEnd().getTime() - System.currentTimeMillis())));
+            }
             event.setResult(PlayerLoginEvent.Result.KICK_BANNED);
             event.setKickMessage(kickMessage.toString());
         }

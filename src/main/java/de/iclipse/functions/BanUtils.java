@@ -25,16 +25,15 @@ public class BanUtils {
 
     private static void kick(Ban ban) {
         if (Bukkit.getPlayer(ban.getUuid()) != null) {
-            String releaseDate;
-            if (ban.isPermanent()) {
-                releaseDate = "PERMANENT";
-            } else {
-                releaseDate = TimeUtils.convertTimestamp(ban.getBanEnd());
-            }
             StringBuilder kickMessage = new StringBuilder();
             kickMessage.append(dispatcher.get("login.blocked.title", false)).append("\n");
             kickMessage.append(dispatcher.get("login.blocked.reason", false, ban.getReason())).append("\n\n");
-            kickMessage.append(dispatcher.get("login.blocked.releaseDate", false, releaseDate));
+            if(ban.isPermanent()){
+                kickMessage.append(dispatcher.get("login.blocked.releaseDate", false, "PERMANENT"));
+            }else{
+                kickMessage.append(dispatcher.get("login.blocked.releaseDate", false, TimeUtils.convertTimestamp(ban.getBanEnd())) + "\n");
+                kickMessage.append(dispatcher.get("login.blocked.unbannedIn", false, TimeUtils.formatTime(ban.getBanEnd().getTime() - System.currentTimeMillis())));
+            }
             Bukkit.getPlayer(ban.getUuid()).kickPlayer(kickMessage.toString());
         }
     }

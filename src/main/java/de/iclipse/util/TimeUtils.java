@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
+import static de.iclipse.BLMain.dispatcher;
+
 public class TimeUtils {
     public static Timestamp getCurrentTimestamp() {
         return new Timestamp(System.currentTimeMillis());
@@ -57,29 +59,46 @@ public class TimeUtils {
         return formatter.format(cal.getTime());
     }
 
-    public static String formatTime(long time) {
-        if (time < 0) return "-";
-        long days = TimeUnit.MILLISECONDS.toDays(time);
-        time -= TimeUnit.DAYS.toMillis(days);
-        long hours = TimeUnit.MILLISECONDS.toHours(time);
-        time -= TimeUnit.HOURS.toMillis(hours);
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(time);
-        time -= TimeUnit.MINUTES.toMillis(minutes);
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(time);
-        StringBuilder sb = new StringBuilder();
-        if (days > 0) {
-            sb.append(days).append(" day").append(days != 1 ? "s " : ", ");
+    public static String formatTime(long millis) {
+        String s = "";
+        int seconds = (int) (millis / 1000L);
+        if (seconds <= 0) return "PERMANENT";
+        int units = 0;
+        if (seconds / (60.0 * 60.0 * 24 * 365) > 1 && units < 3) {
+            s += (int) (seconds / (60.0 * 60.0 * 24 * 365)) + " " + dispatcher.get("unit.years", false) + " ";
+            seconds %= (60.0 * 60.0 * 24 * 365);
+            units++;
         }
-        if (hours > 0) {
-            sb.append(hours).append(" hour").append(hours != 1 ? "s " : ", ");
+        if (seconds / (60.0 * 60.0 * 24 * 30) > 1 && units < 3) {
+            s += (int) (seconds / (60.0 * 60.0 * 24 * 30)) + " " + dispatcher.get("unit.months", false) + " ";
+            seconds %= (60.0 * 60.0 * 24 * 30);
+            units++;
         }
-        if (minutes > 0) {
-            sb.append(minutes).append(" minute").append(minutes != 1 ? "s " : ", ");
+        if (seconds / (60.0 * 60.0 * 24 * 7) > 1 && units < 3) {
+            s += (int) (seconds / (60.0 * 60.0 * 24 * 7)) + " " + dispatcher.get("unit.weeks", false) + " ";
+            seconds %= (60.0 * 60.0 * 24 * 7);
+            units++;
         }
-        if (seconds > 0) {
-            sb.append(seconds).append(" second").append(seconds != 1 ? "s " : " ");
+        if (seconds / (60.0 * 60.0 * 24) > 1 && units < 3) {
+            s += (int) (seconds / (60.0 * 60.0 * 24)) + " " + dispatcher.get("unit.days", false) + " ";
+            seconds %= (60.0 * 60.0 * 24);
+            units++;
         }
-        return sb.toString().trim();
+        if ((seconds / (60.0 * 60.0)) > 1 && units < 3) {
+            s += (int) (seconds / (60.0 * 60.0)) + " " + dispatcher.get("unit.hours", false) + " ";
+            seconds %= (60.0 * 60.0);
+            units++;
+        }
+        if ((seconds / 60.0) > 1 && units < 3) {
+            s += (int) (seconds / (60.0 * 60.0)) + " " + dispatcher.get("unit.minutes", false) + " ";
+            seconds %= 60;
+            units++;
+        }
+        if (seconds  > 0 && units < 3) {
+            s += (int) (seconds / (60.0 * 60.0)) + " " + dispatcher.get("unit.seconds", false) + " ";
+            units++;
+        }
+        return s;
     }
 
     public static String buildTimeString(int time, int digits) {
