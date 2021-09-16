@@ -1,0 +1,20 @@
+name: BansystemLegend
+main: de.iclipse.BLMain
+version: Alpha
+author: Iclipse
+commands:
+  ban:
+    description: Bans a player
+    usage: /ban <Player> <Amount> <Unit> <Reason>
+  permaban:
+    description: Bans a player permanent
+    usage: /ban <Player> <Reason>
+  unban:
+    description: Unbans a player after a correct ban
+    usage: /unban <Player>
+  banhistory:
+    description: Displays a player's ban history
+    usage: /banhistory <Player>
+  baninfo:
+    description: Shows details of a ban
+    usage: /baninfo <ID>
